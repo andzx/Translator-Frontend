@@ -1,0 +1,10 @@
+<form class="login">
+  <input type="email" #e name="email" class="login-email" placeholder="Email" (change)="email = e.value">
+  <input type="password" #p name="password" class="login-password" placeholder="Password" (change)="password = p.value">
+  <div class="btn" (click)="login()">Login <i class="fa fa-sign-in"></i></div>
+</form>
+
+<div class="error-popup" *ngIf="error !== ''">
+  <span class="error">{{error}} <i class="fa fa-exclamation-triangle red"></i></span>
+  <div class="btn btn-error" (click)="error = ''">OK</div>
+</div>

@@ -1,0 +1,66 @@
+<div class="top-panel">
+  <div class="icon" (click)="openProjects()"><i class="fa fa-folder-open-o"></i> Projects</div>
+  <div class="icon" (click)="openSegments()"><i class="fa fa-folder-open-o"></i> Segments</div>
+  <div class="icon" (click)="saveSegment()" *ngIf="!saving && !showCopySelection && !savedRemotely"><i class="fa fa-save"></i> Save segment</div>
+  <div class="icon" *ngIf="savedRemotely" [ngStyle]="{'cursor':'auto', 'background':'white', 'color':'black'}">Saved remotely <i class="fa fa-check green"></i></div>
+  <div class="icon" *ngIf="saving" [ngStyle]="{'cursor':'auto', 'background':'white', 'color':'black'}">Saving...<i class="fa fa-spinner fa-spin"></i></div>
+  <div class="icon switch" *ngIf="!showCopySelection && !saving && !complete" (click)="markComplete()"><i class="fa fa-pencil"></i> Mark segment complete</div>
+  <div class="icon switch" *ngIf="!showCopySelection && !saving && complete" (click)="markComplete()" [ngStyle]="{'background':'green', 'color':'white'}">Segment complete <i class="fa fa-check"></i></div>
+  <div class="text">{{segment?.title | title}}</div>
+  <div class="icon pull-right logout" (click)="logOut()">Log out <i class="fa fa-sign-out"></i></div>
+  <div class="option" (click)="toggleGlossary()">Glossary <span class="option-checkbox" [style.color]="glossaryEnabled ? 'white' : 'black'" [style.background]="glossaryEnabled ? 'green' : 'white'" [style.font-weight]="glossaryEnabled ? 'bold' : 'normal'">{{glossaryEnabled ? 'On' : 'Off'}}</span></div>
+</div>
+
+<div class="editor">
+  <div class="editor-row" *ngFor="let part of segmentParts; let i = index">
+    <div class="sentence-number">{{i + 1}}</div>
+    <div class="editor-source sentence source-sentence{{i}}" [innerHTML]="part.source" (contextmenu)="requestForm()"></div>
+    <textarea class="editor-target sentence target-sentence{{i}}" (click)="highlight(i)" [(ngModel)]="part.target"></textarea>
+  </div>
+</div>
+
+<div class="bottom-panel">
+  <div class="save-status" *ngIf="!saved">Not saved locally <i class="fa fa-close"></i></div>
+  <div class="save-status" *ngIf="saved">Saved locally <i class="fa fa-check green"></i></div>
+</div>
+
+<div class="loading-screen1" *ngIf="loading">
+  <h2>Loading... <i class="fa fa-spinner fa-spin"></i></h2>
+</div>
+
+<div class="select-copy" *ngIf="showCopySelection">
+  <h2 class="notification">Which version  of this segment would you like to continue working on?</h2>
+
+  <div class="remote-segment">
+    <h3 class="sub-heading">Remote copy</h3>
+    <p>{{remoteCopy}}</p>
+    <button type="button"  (click)="selectCopy('remote')">Select remote <i class="fa fa-cloud-download"></i></button>
+  </div>
+
+  <div class="local-segment">
+    <h3 class="sub-heading">Local copy</h3>
+    <p>{{localCopy}}</p>
+    <button type="button" (click)="selectCopy('local')">Select local <i class="fa fa-hdd-o"></i></button>
+  </div>
+</div>
+
+<div class="request" *ngIf="request">
+  <h2 class="sub-heading">How would you translate?</h2>
+  <textarea class="request-context" placeholder="Context" (contextmenu)="specificRequestText()">{{requestContext}}</textarea>
+  <textarea class="request-text" placeholder="Exact word or phrase to translate" #rt (change)="requestText = rt.value">{{requestText}}</textarea>
+  <button type="button" class="btn btn-request" (click)="postRequest()" *ngIf="postingRequest === 1">Send <i class="fa fa-paper-plane-o"></i></button>
+  <h4 class="sub-heading" *ngIf="postingRequest === 2">Posting <i class="fa fa-spinner fa-spin"></i></h4>
+  <h4 class="sub-sub-heading" *ngIf="postingRequest === 3">Posted <i class="fa fa-check green"></i></h4>
+  <button type="button" class="btn btn-request" (click)="postingRequest = 1; request = false; requestText = ''" *ngIf="postingRequest === 3">Close form</button>
+  <button type="button" class="btn btn-close" (click)="postingRequest = 1; request = false; requestText = ''"><i class="fa fa-close"></i></button>
+</div>
+
+<div class="error-popup" *ngIf="error !== ''">
+  <span class="error">{{error}}, the application will exit after clicking ok <i class="fa fa-exclamation-triangle red"></i></span>
+  <div class="btn btn-error" (click)="closeError()">OK</div>
+</div>
+
+<div class="error-popup" *ngIf="warning !== ''">
+  <span class="error">{{warning}} <i class="fa fa-exclamation-circle orange"></i></span>
+  <div class="btn btn-error" (click)="closeWarning()">OK</div>
+</div>

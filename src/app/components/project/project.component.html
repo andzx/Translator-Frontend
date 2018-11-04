@@ -1,0 +1,24 @@
+<app-projects-menu [projectTitle]="title" [progress]="progress"></app-projects-menu>
+
+<h2 class="notification" *ngIf="loading">Loading project <i class="fa fa-spinner fa-spin"></i></h2>
+
+<div class="p-segments">
+  <div class="p-segment" *ngFor="let segment of segments; let i = index">
+    <h2>Segment {{i+1}} <span *ngIf="segment.complete === '1'">(<span class="green">complete</span>)</span></h2>
+    <p>{{segment.text}}...</p>
+    <button type="button" class="btn btn-edit" (click)="editSegment(segment.id)" *ngIf="segment.can_edit === true" title="Click to enter editor mode and work on the translation of this segment"><i class="fa fa-edit"></i> Edit</button>
+    <button type="button" class="btn btn-assign" (click)="assignSegment(segment.id)" *ngIf="segment.assigned === false" title="Click to assign yourself to working on this segment"><i class="fa fa-plus"></i> Assign</button>
+    <button type="button" class="btn btn-assign" (click)="unassignSegment(segment.id)" *ngIf="segment.assigned === true && segment.can_unassign === true" title="Click to remove yourself from working on this segment"><i class="fa fa-minus"></i> Unassign</button>
+    <span class="assigned" *ngIf="segment.assigned === true && segment.can_unassign === false">Segment assigned to {{segment.name}}</span>
+  </div>
+</div>
+
+<div class="error-popup" *ngIf="error !== ''">
+  <span class="error">{{error}}, the application will exit after clicking ok <i class="fa fa-exclamation-triangle red"></i></span>
+  <div class="btn btn-error" (click)="closeError()">OK</div>
+</div>
+
+<div class="error-popup" *ngIf="warning !== ''">
+  <span class="error">{{warning}} <i class="fa fa-exclamation-circle orange"></i></span>
+  <div class="btn btn-error" (click)="warning = ''">OK</div>
+</div>

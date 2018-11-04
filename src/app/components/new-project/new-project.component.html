@@ -1,0 +1,53 @@
+<app-projects-menu></app-projects-menu>
+
+<form class="new-project">
+  <div class="row">
+    <input type="text" #t class="title" placeholder="Project title" (change)="title = t.value">
+  </div>
+  
+  <div class="row">
+    <textarea class="description" placeholder="Project description" #d (change)="description = d.value"></textarea>
+    <textarea class="glossary" placeholder="Glossary, format: word or phraze in english = word or phraze in latvian;" #g (change)="glossary = g.value" title="Please use the following glossary format: word or phraze in English = word or phraze in Latvian; Example: Bear eats honey = Lācis ēd medu;"></textarea>
+  </div>
+
+  <div class="row">
+    <div class="segments" *ngIf="processing === 0">
+      <input class="btn-file" type="file" id="file" accept=".pdf" (change)="fileChange($event)" multiple>
+      <label for="file" class="file-spoof" title="Select source files to process (accepted formats: PDF)">Select files to upload...</label>
+    </div>
+
+    <div class="segments" *ngIf="processing === 1">
+      Processing... <i class="fa fa-refresh fa-spin"></i>
+    </div>
+
+    <div class="segments" *ngIf="processing === 2">
+      <ul>
+        <li *ngFor="let segment of segments; let i = index">
+          <h3>Segment #{{i + 1}}</h3>
+          <p>{{segment}}</p>
+        </li>
+      </ul>
+    </div>
+
+    <div class="segments" *ngIf="processing === 4">
+        <i class="fa fa-check green"></i> Project uploaded
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="file-upload">
+      <button type="button" class="btn btn-clear-segments" *ngIf="segments.length > 0 && processing < 3" (click)="clearSegments()" title="Delete selected segments"><i class="fa fa-trash-o"></i> Clear selected segments</button>
+      <button type="button" class="btn btn-upload pull-right" (click)="uploadProject()" [disabled]="files.length === 0 || processing > 2" title="Upload project"><i class="fa fa-upload"></i> Upload project</button>
+    </div>
+  </div>
+</form>
+
+<div class="error-popup" *ngIf="error !== ''">
+  <span class="error">{{error}}, the application will exit after clicking ok <i class="fa fa-exclamation-triangle red"></i></span>
+  <div class="btn btn-error" (click)="closeError()">OK</div>
+</div>
+
+<div class="error-popup" *ngIf="warning !== ''">
+  <span class="error">{{warning}} <i class="fa fa-exclamation-circle orange"></i></span>
+  <div class="btn btn-error" (click)="warning = ''">OK</div>
+</div>

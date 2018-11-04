@@ -1,0 +1,10 @@
+<div class="top-panel">
+  <div class="icon" (click)="newProject()" *ngIf="accessLevel === '2'"><i class="fa fa-file-text-o"></i> New project</div>
+  <div class="icon" (click)="showProjects()"><i class="fa fa-folder-open-o"></i> Projects</div>
+  <div class="text segment-title">{{projectTitle | title}}</div>
+  <div class="icon pull-right" (click)="logout()">Log out <i class="fa fa-sign-out"></i></div>
+</div>
+
+<div class="progress-bar" *ngIf="progress">
+  <div class="progression" [style.max-width]="progress + '%'">{{progress}}% done</div>
+</div>
